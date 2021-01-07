@@ -1,13 +1,7 @@
 package coreysrobots;
 import robocode.*;
 import java.util.*;
-//import java.awt.Color;
 
-// API help : https://robocode.sourceforge.io/docs/robocode/robocode/Robot.html
-
-/**
- * Cobot - a robot by (your name here)
- */
 public class Cobot extends Robot {
 	private int direction;
 	
@@ -31,23 +25,24 @@ public class Cobot extends Robot {
 	
 	}
 	
+	/*
+	 * turnToDegree:
+	 * Method moves robot while preventing it from colliding with walls
+	 */
 	public void turnToDegree() {
 		direction = findHorOrVert();
-		System.out.println(direction);
-		System.out.println(findXQuadrant());
-		System.out.println(findYQuadrant());
 		
 		if(direction == 0 && findXQuadrant() == 0) {
-			turnRight(getTurnDegrees(90));
+			turnFast(90);
 		}
 		else if(direction == 0 && findXQuadrant() == 1) {
-			turnRight(getTurnDegrees(270));
+			turnFast(270);
 		}
 		else if(direction == 1 && findYQuadrant() == 0) {
-			turnRight(getTurnDegrees(0));
+			turnFast(0);
 		}
 		else if(direction == 1 && findYQuadrant() == 1) {
-			turnRight(getTurnDegrees(180));
+			turnFast(180);
 		}
 	}
 	
@@ -83,7 +78,7 @@ public class Cobot extends Robot {
 	 */
 	public double getRandomDistance() {
 		Random rd = new Random();
-		return rd.nextDouble() * 300 + 600;
+		return rd.nextDouble() * 300 + 450;
 	}
 	
 	/*
@@ -96,10 +91,32 @@ public class Cobot extends Robot {
 	}
 	
 	/*
-	 * getTurnDegrees:
+	 * turnFast:
 	 * Returns amount of degrees the robot needs to turn in order to face a certain degree
+	 * Credits: Seungjae Lee
 	 */
-	public double getTurnDegrees(double finDeg) {
-		return (360 - getHeading() + finDeg) % 360;
-	}
+	public void turnFast(double finDeg) {
+        double firstFourth = (360 - getHeading() + finDeg) % 180;
+        double secondThird = (360 + getHeading() - finDeg) % 180;
+        if(firstFourth == 0) {
+            firstFourth = 180;
+        }
+        if(secondThird == 0) {
+            secondThird = 180;
+        }
+        if(getHeading() >= 0 && getHeading() < 180) {
+            if(getHeading() + 180 >= finDeg && finDeg >= getHeading()) {
+                turnRight(firstFourth);
+            }
+            else {
+                turnLeft(secondThird);
+			}
+        }
+        else if(getHeading() - 180 <= finDeg && finDeg <= getHeading()) {
+            turnLeft(secondThird);
+        }
+        else {
+            turnRight(firstFourth);
+        }
+    }
 }
