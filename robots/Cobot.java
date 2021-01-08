@@ -10,11 +10,13 @@ public class Cobot extends Robot {
 		while(true) {
 			turnToDegree();
 			ahead(getRandomDistance());
+			turnGunLeft(360);
 		}
 	}
 
 	public void onScannedRobot(ScannedRobotEvent e) {
-		fire(1);
+		Random rd = new Random();
+		fire(rd.nextInt(3) + 1);
 	}
 
 	public void onHitByBullet(HitByBulletEvent e) {
@@ -98,6 +100,7 @@ public class Cobot extends Robot {
 	public void turnFast(double finDeg) {
         double firstFourth = (360 - getHeading() + finDeg) % 180;
         double secondThird = (360 + getHeading() - finDeg) % 180;
+		
         if(firstFourth == 0) {
             firstFourth = 180;
         }
